@@ -8,11 +8,8 @@ import { ContactPage } from "./ContactPage";
 import { stock00, stock01, stock02 } from "../../assets/assets";
 import { AUTH } from "../../lib/routes";
 import { motion } from "framer-motion";
-import { ZoomInTransition } from "../ui/motion/ZoomInTransition";
-import { CircleExpansionTransition } from "../ui/motion/CircleExpansionTransition";
-import { RotatingOverlayTransition } from "../ui/motion/RotatingOverlayTransition";
-import { WipeTransition } from "../ui/motion/WipeTransition";
 import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
+// import { CubingTransition } from "../ui/motion/CubingTransition";
 export const LandingPage = () => {
     const [showPrivacy, setShowPrivacy] = useState(false);
     const [showContact, setShowContact] = useState(false);
@@ -57,6 +54,8 @@ export const LandingPage = () => {
 
     return (
         <>
+            <DiagonalSlideTransition />
+            {/* <CubingTransition /> */}
             <AnimatePresence>
                 {showContact && <ContactPage onBack={handleHideContact} />}
                 {showPrivacy && <PrivacyPage onBack={handleHidePrivacy} />}
