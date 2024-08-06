@@ -14,16 +14,16 @@ export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
             transition={{ type: 'spring', stiffness: 120 }}
             className="fixed inset-0 bg-black text-white flex flex-col items-center justify-center min-h-[100dvh] bg-background px-4 py-12 sm:px-6 lg:px-8 z-50 overflow-y-auto"
         >
+                <button
+                    className="bg-black/90 mb-4 sticky bg-white text-black inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    onClick={onBack}
+                >
+                    <ArrowLeftIcon className="mr-2 h-4 w-4" />
+                    Back to Home
+                </button>
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 max-h-[90vh] overflow-y-auto">
                 <div className="space-y-8">
                     <div>
-                        <button
-                            className="bg-white text-black inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                            onClick={onBack}
-                        >
-                            <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                            Back to Home
-                        </button>
                     </div>
                     <div className="space-y-4">
                         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Privacy Policy</h1>
