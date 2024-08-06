@@ -1,72 +1,88 @@
-import { Link } from "react-router-dom";
 import { ArrowLeftIcon } from "../ui/icons";
+import { motion } from "framer-motion";
 
-export const PrivacyPage = () => {
+interface PrivacyPageProps {
+    onBack: () => void;
+}
+
+export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
     return (
-        <div className="min-h-[100dvh] bg-background text-foreground">
-            <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <motion.div
+            initial={{ x: '-100vw' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100vw' }}
+            transition={{ type: 'spring', stiffness: 120 }}
+            className="fixed inset-0 bg-black text-white flex flex-col items-center justify-center min-h-[100dvh] bg-background px-4 py-12 sm:px-6 lg:px-8 z-50 overflow-y-auto"
+        >
+            <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 max-h-[90vh] overflow-y-auto">
                 <div className="space-y-8">
                     <div>
-                        <Link
-                            className="bg-black text-white inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                            to="/"
+                        <button
+                            className="bg-white text-black inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                            onClick={onBack}
                         >
                             <ArrowLeftIcon className="mr-2 h-4 w-4" />
                             Back to Home
-                        </Link>
+                        </button>
                     </div>
                     <div className="space-y-4">
-                        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Privacy Policy</h1>
-                        <p className="text-muted-foreground">
-                            At our company, we are committed to protecting your privacy and the security of your personal information.
-                            This privacy policy outlines how we collect, use, and safeguard your data.
+                        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Privacy Policy</h1>
+                        <p className="text-sm text-muted-foreground">
+                            At Jinsil, we are committed to protecting your privacy and ensuring that your personal information is handled with care.
+                            This Privacy Policy outlines how we manage your data when you use our certificate-sharing platform.
                         </p>
                     </div>
                     <div className="space-y-6">
                         <div>
-                            <h2 className="text-2xl font-bold">Data Collection</h2>
-                            <p className="text-muted-foreground">
-                                We collect various types of information from you, including your name, email address, and any other
-                                information you provide to us through our website or services. This information is used to provide you
-                                with the best possible experience and to improve our products and services.
+                            <h2 className="text-xl font-bold">Data Collection</h2>
+                            <p className="text-sm text-muted-foreground">
+                                We only collect the essential information needed to provide our services. This includes:
+                                <ul className="list-disc list-inside ml-4">
+                                    <li><strong>Email Address</strong>: Used for authentication and communication.</li>
+                                    <li><strong>First Name</strong>: Used to personalize your experience.</li>
+                                </ul>
+                                We do not collect any other personal data beyond what is required for account creation and authentication.
                             </p>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">Data Protection</h2>
-                            <p className="text-muted-foreground">
-                                We take the security of your data very seriously. We use industry-standard encryption and other security
-                                measures to protect your information from unauthorized access, disclosure, or misuse. We also regularly
-                                review and update our security protocols to ensure they remain effective.
+                            <h2 className="text-xl font-bold">Data Usage</h2>
+                            <p className="text-sm text-muted-foreground">
+                                Your data is used solely for the purpose of:
+                                <ul className="list-disc list-inside ml-4">
+                                    <li><strong>Authentication</strong>: To manage your account and login to our platform.</li>
+                                    <li><strong>Communication</strong>: To send you updates related to your account and the platform.</li>
+                                </ul>
+                                We do not use your data for any other purposes or share it with third parties.
                             </p>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">Data Sharing</h2>
-                            <p className="text-muted-foreground">
-                                We do not share your personal information with any third parties without your consent, except as
-                                required by law or to provide you with the services you have requested. We may share aggregated,
-                                non-personally identifiable information with our partners and affiliates to improve our products and
-                                services.
+                            <h2 className="text-xl font-bold">Data Security</h2>
+                            <p className="text-sm text-muted-foreground">
+                                We implement industry-standard security measures to protect your data from unauthorized access, alteration, or disclosure.
+                                However, please note that no method of electronic transmission or storage is completely secure.
                             </p>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">User Rights</h2>
-                            <p className="text-muted-foreground">
-                                You have the right to access, correct, or delete your personal information at any time. You can also
-                                opt-out of receiving marketing communications from us. If you have any questions or concerns about your
-                                data, please contact our privacy team.
+                            <h2 className="text-xl font-bold">Third-Party Disclosure</h2>
+                            <p className="text-sm text-muted-foreground">
+                                We do not sell, trade, or transfer your personal information to outside parties. We use Firebase for authentication, which may involve the storage and management of your data by Firebase as part of their services.
                             </p>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">Changes to Policy</h2>
-                            <p className="text-muted-foreground">
-                                We may update this privacy policy from time to time to reflect changes in our practices or applicable
-                                laws. We will notify you of any material changes by posting the updated policy on our website and, if
-                                necessary, obtaining your consent.
+                            <h2 className="text-xl font-bold">Your Rights</h2>
+                            <p className="text-sm text-muted-foreground">
+                                You have the right to:
+                                <ul className="list-disc list-inside ml-4">
+                                    <li><strong>Access</strong>: View the information we hold about you.</li>
+                                    <li><strong>Update</strong>: Make changes to your account details.</li>
+                                    <li><strong>Delete</strong>: Request the deletion of your account and personal information.</li>
+                                </ul>
+                                If you have any questions or concerns about your privacy or this policy, please contact us directly.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
