@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DefaultFooter } from "../ui/default-footer";
 import { DefaultHeader } from "../ui/default-header";
 import { PrivacyPage } from "./PrivacyPage";
@@ -6,10 +6,18 @@ import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ContactPage } from "./ContactPage";
 import { stock00, stock01, stock02 } from "../../assets/assets";
-
+import { AUTH } from "../../lib/routes";
+import { motion } from "framer-motion";
+import { ZoomInTransition } from "../ui/motion/ZoomInTransition";
+import { CircleExpansionTransition } from "../ui/motion/CircleExpansionTransition";
+import { RotatingOverlayTransition } from "../ui/motion/RotatingOverlayTransition";
+import { WipeTransition } from "../ui/motion/WipeTransition";
+import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
 export const LandingPage = () => {
     const [showPrivacy, setShowPrivacy] = useState(false);
     const [showContact, setShowContact] = useState(false);
+
+    const navigate = useNavigate();
 
     const toggleBodyOverflow = (shouldHide: boolean) => {
         if (shouldHide) {
@@ -101,14 +109,17 @@ export const LandingPage = () => {
                                         Jinsil provides a secure and reliable platform to store your certificates. Your data is encrypted and
                                         protected, ensuring your credentials are safe and accessible only to you.
                                     </p>
-                                    <div className="mt-8">
-                                        <Link
+                                    <motion.div className="mt-8"
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <button
                                             className="bg-black text-white inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                                            to={""}
+                                            onClick={() => navigate(AUTH)}
                                         >
                                             Learn More
-                                        </Link>
-                                    </div>
+                                        </button>
+                                    </motion.div>
                                 </div>
                             </div>
                         </div>
@@ -125,14 +136,17 @@ export const LandingPage = () => {
                                         Jinsil makes it easy to share your certificates with others. Simply select the certificates you want
                                         to share and send them a link so they can view your credentials.
                                     </p>
-                                    <div className="mt-8">
-                                        <Link
+                                    <motion.div className="mt-8"
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <button
                                             className="bg-black text-white inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                                            to={""}
+                                            onClick={() => navigate(AUTH)}
                                         >
                                             Learn More
-                                        </Link>
-                                    </div>
+                                        </button>
+                                    </motion.div>
                                 </div>
                                 <div className="flex items-center justify-center">
                                     <img

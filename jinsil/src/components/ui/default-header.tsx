@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDownIcon, ArrowUpIcon } from "./icons";
 import { logo } from "../../assets/assets"; // Import the logo
+import { AUTH } from "../../lib/routes";
+import { motion } from "framer-motion";
 
 export const DefaultHeader = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -48,12 +50,18 @@ export const DefaultHeader = () => {
                         <span className="ml-2 text-white font-bold">Jinsil</span>
                     </div>
                 </div>
-                <Link
-                    className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium text-primary shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                    to={""}
+                <motion.div
+                    whileHover={{ scale: 1.1, backgroundColor: '#ffffff', color: '#000000', transition: { duration: 0.3 } }}
+                    whileTap={{ scale: 0.9, backgroundColor: '#ffffff', color: '#000000', transition: { type: 'spring', stiffness: 300, damping: 10 } }}
+                    className="inline-flex items-center"
                 >
-                    Share Your Certificates
-                </Link>
+                    <Link
+                        className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        to={AUTH}
+                    >
+                        Share Your Certificates
+                    </Link>
+                </motion.div>
             </div>
         </header>
     );
