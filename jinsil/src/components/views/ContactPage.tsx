@@ -42,7 +42,7 @@ export const ContactPage = ({ onBack }: ContactPageProps) => {
                             <span className="sr-only">GitHub</span>
                         </motion.button>
                     </a>
-                    <a href="https://linkedin.com/in/joshratificar" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.linkedin.com/in/joshratificar/" target="_blank" rel="noopener noreferrer">
                         <motion.button
                             whileHover={{ scale: 1.1, backgroundColor: '#ffffff', color: '#000000', transition: { duration: 0.3 } }}
                             whileTap={{ scale: 0.9, backgroundColor: '#ffffff', color: '#000000', transition: { type: 'spring', stiffness: 300, damping: 10 } }}

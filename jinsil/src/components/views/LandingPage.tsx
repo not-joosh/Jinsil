@@ -5,11 +5,13 @@ import { PrivacyPage } from "./PrivacyPage";
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ContactPage } from "./ContactPage";
-import { stock00, stock01, stock02 } from "../../assets/assets";
 import { AUTH } from "../../lib/routes";
 import { motion } from "framer-motion";
 import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
-// import { CubingTransition } from "../ui/motion/CubingTransition";
+import { 
+    stock06, stock07, stock08
+} from "../../assets/assets";
+
 export const LandingPage = () => {
     const [showPrivacy, setShowPrivacy] = useState(false);
     const [showContact, setShowContact] = useState(false);
@@ -77,7 +79,7 @@ export const LandingPage = () => {
                                 </div>
                                 <div className="flex items-center justify-center">
                                     <img
-                                        src={stock00}
+                                        src={stock06}
                                         width="550"
                                         height="550"
                                         alt="Hero"
@@ -93,7 +95,7 @@ export const LandingPage = () => {
                             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
                                 <div className="flex items-center justify-center">
                                     <img
-                                        src={stock01}
+                                        src={stock08}
                                         width="550"
                                         height="310"
                                         alt="Features"
@@ -149,7 +151,7 @@ export const LandingPage = () => {
                                 </div>
                                 <div className="flex items-center justify-center">
                                     <img
-                                        src={stock02}
+                                        src={stock07}
                                         width="550"
                                         height="310"
                                         alt="Features"
