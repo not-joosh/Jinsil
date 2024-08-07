@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LANDINGPAGE } from "../lib/routes";
-
+import { useToast } from "./ui/use-toast";
 
 const loginSchema = yup.object().shape({
     email: yup.string().required("Email is required").email("Invalid email format"),
@@ -24,6 +24,7 @@ interface LoginFormData {
 
 export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
     const navigate = useNavigate();
+    const { toast } = useToast();
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(loginSchema),
     });
@@ -31,25 +32,54 @@ export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
 
     const handleGoogleSignIn = async () => {
         try {
-
+            setIsLoading(true);
+            // timeout for 2 seconds
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            throw new Error("Google Sign In is not yet implemented");
+            toast({
+                title: "Success",
+                description: "Successfully signed in with Google.",
+                variant: "success",
+                duration: 3000
+            });
         } catch(error: unknown) {
             if(error instanceof Error) {
-                console.error(error);
+                toast({
+                    title: "An Error Occurred",
+                    description: `${error.message}`,
+                    variant: "destructive",
+                    duration: 4000
+                });
             }
+        } finally {
+            setIsLoading(false);
         }
     };
-    const onSubmit = (data: LoginFormData) => {
-        try {
 
-        } catch (error) {
-            console.error(error);
+    const onSubmit = async (data: LoginFormData) => {
+        try {
+            setIsLoading(true);
+            // timeout for 2 seconds
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            throw new Error("Sign In is not yet implemented");
+            toast({
+                title: "Success",
+                description: "Successfully authenticated.",
+                variant: "success",
+                duration: 3000
+            });
+        } catch(error: unknown) {
+            if(error instanceof Error) {
+                toast({
+                    title: "An Error Occurred",
+                    description: `${error.message}`,
+                    variant: "destructive",
+                    duration: 4000
+                });
+            }
+        } finally {
+            setIsLoading(false);
         }
-        // setIsLoading(true);
-        // // Handle login logic here
-        // setTimeout(() => {
-        //     setIsLoading(false);
-        //     // Navigate to another page or handle post-login actions
-        // }, 2000);
     };
 
     return (

@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AUTH, HOME, LANDINGPAGE } from "./lib/routes";
 import { LandingPage } from "./components/views/LandingPage";
 import { AuthView } from "./components/views/Auth";
-
+import { Toaster } from "./components/ui/toaster";  
 /*================================================================================
 *               COMPONENTS AND ROUTES
 ==================================================================================*/
@@ -19,6 +19,7 @@ function App() {
   
   return (
     <Router>
+      <Toaster />
       <Routes>
         <Route path = {LANDINGPAGE} element = {<LandingPage />} /> 
         <Route path = {HOME} element = {<div>Home</div>} />
