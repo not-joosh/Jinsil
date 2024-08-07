@@ -17,14 +17,6 @@ import { HomePage } from "./components/views/HomePage";
 *               APP ENTRY (ROUTING)
 ==================================================================================*/
 function App() {
-  const wrapNavbar = () => {
-    return (
-      <>
-
-      </>
-    );
-  };
-
   return (
     <Router>
       <Toaster />
@@ -32,9 +24,9 @@ function App() {
         <Route path = {LANDINGPAGE} element = {<LandingPage />} /> 
         <Route path = {HOME} element = {<HomePage />}>
         </Route>
-          <Route path = "certificate" element = {<div className = "text-black ">Certificates<Outlet /></div>}>
-            <Route path = ":id" element = {<div className = "text-black ">id specific <Outlet /></div>}/>
-          </Route>
+        <Route path = "certificate" element = {<div className = "text-black ">Certificates<Outlet /></div>}>
+          <Route path = ":id" element = {<div className = "text-black ">id specific <Outlet /></div>}/>
+        </Route>
         <Route path = {AUTH} element = {<AuthView />} />
           {/* HANDLING ERROR ROUTRES */}
           {/* <Route path = "/home" element = {<>Hi</>}>
