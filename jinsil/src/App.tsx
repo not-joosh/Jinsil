@@ -1,11 +1,12 @@
 /*================================================================================
 *               DEPENDENCIES
 ==================================================================================*/
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 import { AUTH, HOME, LANDINGPAGE } from "./lib/routes";
 import { LandingPage } from "./components/views/LandingPage";
 import { AuthView } from "./components/views/Auth";
 import { Toaster } from "./components/ui/toaster";  
+import { HomePage } from "./components/views/HomePage";
 /*================================================================================
 *               COMPONENTS AND ROUTES
 ==================================================================================*/
@@ -16,13 +17,24 @@ import { Toaster } from "./components/ui/toaster";
 *               APP ENTRY (ROUTING)
 ==================================================================================*/
 function App() {
-  
+  const wrapNavbar = () => {
+    return (
+      <>
+
+      </>
+    );
+  };
+
   return (
     <Router>
       <Toaster />
       <Routes>
         <Route path = {LANDINGPAGE} element = {<LandingPage />} /> 
-        <Route path = {HOME} element = {<div>Home</div>} />
+        <Route path = {HOME} element = {<HomePage />}>
+        </Route>
+          <Route path = "certificate" element = {<div className = "text-black ">Certificates<Outlet /></div>}>
+            <Route path = ":id" element = {<div className = "text-black ">id specific <Outlet /></div>}/>
+          </Route>
         <Route path = {AUTH} element = {<AuthView />} />
           {/* HANDLING ERROR ROUTRES */}
           {/* <Route path = "/home" element = {<>Hi</>}>
