@@ -4,7 +4,6 @@ import { ChromeIcon } from "./ui/icons";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState } from "react";
 import { LANDINGPAGE } from "../lib/routes";
 
 
@@ -29,13 +28,28 @@ export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
         resolver: yupResolver(loginSchema),
     });
 
+
+    const handleGoogleSignIn = async () => {
+        try {
+
+        } catch(error: unknown) {
+            if(error instanceof Error) {
+                console.error(error);
+            }
+        }
+    };
     const onSubmit = (data: LoginFormData) => {
-        setIsLoading(true);
-        // Handle login logic here
-        setTimeout(() => {
-            setIsLoading(false);
-            // Navigate to another page or handle post-login actions
-        }, 2000);
+        try {
+
+        } catch (error) {
+            console.error(error);
+        }
+        // setIsLoading(true);
+        // // Handle login logic here
+        // setTimeout(() => {
+        //     setIsLoading(false);
+        //     // Navigate to another page or handle post-login actions
+        // }, 2000);
     };
 
     return (
@@ -63,6 +77,7 @@ export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
                 whileHover={{ scale: 1.04, backgroundColor: '#1e3a8a', transition: { duration: 0.3 } }}
                 whileTap={{ scale: 0.96, backgroundColor: '#1e3a8a', transition: { type: 'spring', stiffness: 300, damping: 10 } }}
                 className="w-full flex items-center justify-center bg-blue-600 text-white py-2 rounded-lg"
+                onClick={handleGoogleSignIn}
             >
                 <ChromeIcon className="mr-2 h-5 w-5" />
                 Sign in with Google

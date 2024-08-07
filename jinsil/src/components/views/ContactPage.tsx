@@ -80,7 +80,7 @@ export const ContactPage = ({ onBack }: ContactPageProps) => {
             >
                 <button
                     onClick={onBack}
-                    className="text-black bg-white inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    className="text-black bg-white inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
                 >
                     <ArrowLeftIcon className="w-4 h-4" />
                     Go Back

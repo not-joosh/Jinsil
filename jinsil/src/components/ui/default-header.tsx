@@ -56,7 +56,7 @@ export const DefaultHeader = () => {
                     className="inline-flex items-center"
                 >
                     <Link
-                        className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
                         to={AUTH}
                     >
                         Share Your Certificates
