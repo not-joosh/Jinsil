@@ -27,13 +27,13 @@ export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
                 </button>
             </motion.div>
 
-            <div className="container text-white mx-auto px-4 py-12 sm:px-6 lg:px-8 max-h-[90vh] overflow-y-auto">
+            <div className="container !text-white mx-auto px-4 py-12 sm:px-6 lg:px-8 max-h-[90vh] overflow-y-auto">
                 <div className="space-y-8">
                     <div>
                     </div>
                     <div className="space-y-4">
                         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Privacy Policy</h1>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-white">
                             At Jinsil, we are committed to protecting your privacy and ensuring that your personal information is handled with care.
                             This Privacy Policy outlines how we manage your data when you use our certificate-sharing platform.
                         </p>
@@ -41,7 +41,7 @@ export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
                     <div className="space-y-6">
                         <div>
                             <h2 className="text-xl font-bold">Data Collection</h2>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 We only collect the essential information needed to provide our services. This includes:
                                 <ul className="list-disc list-inside ml-4">
                                     <li><strong>Email Address</strong>: Used for authentication and communication.</li>
@@ -52,7 +52,7 @@ export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
                         </div>
                         <div>
                             <h2 className="text-xl font-bold">Data Usage</h2>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 Your data is used solely for the purpose of:
                                 <ul className="list-disc list-inside ml-4">
                                     <li><strong>Authentication</strong>: To manage your account and login to our platform.</li>
@@ -63,20 +63,20 @@ export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
                         </div>
                         <div>
                             <h2 className="text-xl font-bold">Data Security</h2>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 We implement industry-standard security measures to protect your data from unauthorized access, alteration, or disclosure.
                                 However, please note that no method of electronic transmission or storage is completely secure.
                             </p>
                         </div>
                         <div>
                             <h2 className="text-xl font-bold">Third-Party Disclosure</h2>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 We do not sell, trade, or transfer your personal information to outside parties. We use Firebase for authentication, which may involve the storage and management of your data by Firebase as part of their services.
                             </p>
                         </div>
                         <div>
                             <h2 className="text-xl font-bold">Your Rights</h2>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 You have the right to:
                                 <ul className="list-disc list-inside ml-4">
                                     <li><strong>Access</strong>: View the information we hold about you.</li>

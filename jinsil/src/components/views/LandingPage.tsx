@@ -5,7 +5,7 @@ import { PrivacyPage } from "./PrivacyPage";
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ContactPage } from "./ContactPage";
-import { AUTH } from "../../lib/routes";
+import { AUTH, HOME } from "../../lib/routes";
 import { motion } from "framer-motion";
 import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
 import { 
@@ -53,6 +53,13 @@ export const LandingPage = () => {
             toggleBodyOverflow(false); // Reset overflow on component unmount
         };
     }, []);
+
+    useEffect(() => {
+        const uid = localStorage.getItem('uid');
+        if (uid) {
+            navigate(HOME);
+        }
+    });
 
     return (
         <>

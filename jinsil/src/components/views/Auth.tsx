@@ -3,14 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { GradientSwipeBlob } from "../ui/motion/GradientSwipBlob";
 import { LoadingIcon } from "../ui/motion/LoadingIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginForm } from "../login-form";
 import { RegisterForm } from "../register-form";
+import { HOME } from "@/lib/routes";
 
 export const AuthView = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const uid = localStorage.getItem('uid');
+        if (uid) {
+            navigate(HOME);
+        }
+    });
 
     return (
         <>

@@ -2,7 +2,7 @@
 *               DEPENDENCIES
 ==================================================================================*/
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
-import { AUTH, HOME, LANDINGPAGE } from "./lib/routes";
+import { AUTH, HOME, LANDINGPAGE, SETTINGS } from "./lib/routes";
 import { LandingPage } from "./components/views/LandingPage";
 import { AuthView } from "./components/views/Auth";
 import { Toaster } from "./components/ui/toaster";  
@@ -28,11 +28,14 @@ function App() {
           <Route path = ":id" element = {<div className = "text-black ">id specific <Outlet /></div>}/>
         </Route>
         <Route path = {AUTH} element = {<AuthView />} />
+        <Route path = {SETTINGS} element = {<div>Settings</div>} />
+
           {/* HANDLING ERROR ROUTRES */}
           {/* <Route path = "/home" element = {<>Hi</>}>
           <Route path = ":id" element = {<div className = "text-black ">id specific <Outlet /></div>}/>
           <Route path = "admin" element = {<>Admin<Outlet /></>}/>
           </Route> */}
+        
         <Route path = "*" element = {<div>404</div>} />
       </Routes>
     </Router>
