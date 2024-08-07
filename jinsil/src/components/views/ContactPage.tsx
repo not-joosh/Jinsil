@@ -83,7 +83,7 @@ export const ContactPage = ({ onBack }: ContactPageProps) => {
                     className="text-black bg-white inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
                 >
                     <ArrowLeftIcon className="w-4 h-4" />
-                    Go Back
+                    Close
                 </button>
             </motion.div>
         </motion.div>

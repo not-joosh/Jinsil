@@ -23,7 +23,7 @@ export const PrivacyPage = ({ onBack }: PrivacyPageProps) => {
                     onClick={onBack}
                 >
                     <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                    Go Back
+                    Close
                 </button>
             </motion.div>
 

@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDownIcon, ArrowUpIcon } from "./icons";
 import { logo } from "../../assets/assets"; // Import the logo
-import { AUTH } from "../../lib/routes";
+import { AUTH, HOME } from "../../lib/routes";
 import { motion } from "framer-motion";
+import { auth } from "@/config/firebase";
 
 export const DefaultHeader = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,6 +20,15 @@ export const DefaultHeader = () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    useEffect(() => {
+        const uid = auth.currentUser?.uid || localStorage.getItem('uid');
+        if(uid) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    });
 
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -50,18 +61,35 @@ export const DefaultHeader = () => {
                         <span className="ml-2 text-white font-bold">Jinsil</span>
                     </div>
                 </div>
-                <motion.div
-                    whileHover={{ scale: 1.1, backgroundColor: '#ffffff', color: '#000000', transition: { duration: 0.3 } }}
-                    whileTap={{ scale: 0.9, backgroundColor: '#ffffff', color: '#000000', transition: { type: 'spring', stiffness: 300, damping: 10 } }}
-                    className="inline-flex items-center"
-                >
-                    <Link
-                        className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
-                        to={AUTH}
+                
+                {!isLoggedIn? (
+                    <motion.div
+                        whileHover={{ scale: 1.1, backgroundColor: '#ffffff', color: '#000000', transition: { duration: 0.3 } }}
+                        whileTap={{ scale: 0.9, backgroundColor: '#ffffff', color: '#000000', transition: { type: 'spring', stiffness: 300, damping: 10 } }}
+                        className="inline-flex items-center"
                     >
-                        Share Your Certificates
-                    </Link>
-                </motion.div>
+                        <Link
+                            className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+                            to={AUTH}
+                        >
+                            Share Your Certificates
+                        </Link>
+                    </motion.div>
+                ):
+                (
+                    <motion.div
+                        whileHover={{ scale: 1.1, backgroundColor: '#ffffff', color: '#000000', transition: { duration: 0.3 } }}
+                        whileTap={{ scale: 0.9, backgroundColor: '#ffffff', color: '#000000', transition: { type: 'spring', stiffness: 300, damping: 10 } }}
+                        className="inline-flex items-center"
+                    >
+                        <Link
+                            className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+                            to={HOME}
+                        >
+                            Return
+                        </Link>
+                    </motion.div>
+                )}
             </div>
         </header>
     );

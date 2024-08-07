@@ -6,8 +6,8 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { UploadIcon } from "./ui/icons";
 import { useToast } from "./ui/use-toast";
 import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 import { motion } from "framer-motion";
-
 interface CertificateUploadFormProps {
     isOpen: boolean;
     onClose: () => void;
@@ -16,8 +16,10 @@ interface CertificateUploadFormProps {
 
 interface CertificateUploadFormData {
     photo: File;
-    dateCompleted: string; // Change this to string to match the date input value
+    dateCompleted: string;
     title: string;
+    description: string;
+    awardedTo: string;
 }
 
 const schema = yup.object().shape({
@@ -27,6 +29,8 @@ const schema = yup.object().shape({
         .string()
         .required("Title is required")
         .min(2, "Title must be at least 2 characters long"),
+    description: yup.string().required("Description is required"),
+    awardedTo: yup.string().required("Awarded to is required"),
 });
 
 export const CertificateUploadForm = ({ isOpen, onClose, setIsLoading }: CertificateUploadFormProps) => {
@@ -93,9 +97,9 @@ export const CertificateUploadForm = ({ isOpen, onClose, setIsLoading }: Certifi
     };
 
     const handleClose = () => {
-        reset(); // Reset the form fields
-        setFilePreview(null); // Clear the file preview
-        onClose(); // Close the dialog
+        reset();
+        setFilePreview(null);
+        onClose();
     };
 
     return (
@@ -201,6 +205,42 @@ export const CertificateUploadForm = ({ isOpen, onClose, setIsLoading }: Certifi
                                 <p className="text-xs text-red-500">{errors.title.message}</p>
                             )}
                         </div>
+                    </div>
+                    <div>
+                        <label htmlFor="awarded-to">Awarded To</label>
+                        <Controller
+                            name="awardedTo"
+                            control={control}
+                            render={({ field }) => (
+                                <Input 
+                                    id="awarded-to"
+                                    placeholder="Enter recipient's name"
+                                    {...field}
+                                    className="w-full"
+                                />
+                            )}
+                        />
+                        {errors.awardedTo && (
+                            <p className="text-xs text-red-500">{errors.awardedTo.message}</p>
+                        )}
+                    </div>
+                    <div>
+                        <label htmlFor="certificate-description">Certificate Description</label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <Textarea 
+                                    id="certificate-description"
+                                    placeholder="Enter certificate description"
+                                    {...field}
+                                    className="w-full"
+                                />
+                            )}
+                        />
+                        {errors.description && (
+                            <p className="text-xs text-red-500">{errors.description.message}</p>
+                        )}
                     </div>
                     <DialogFooter>
                         <motion.button 
