@@ -5,7 +5,6 @@ import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
 import { SideMenu } from "../ui/side-menu";
 import { Navbar } from "../ui/mobile-navbar";
 import { Download } from "lucide-react";
-import { stock01 } from "@/assets/assets";
 import { LANDINGPAGE } from "@/lib/routes";
 import { useNavigate } from "react-router-dom";
 import { LoadingIcon } from "../ui/motion/LoadingIcon";
@@ -13,6 +12,9 @@ import { CertificateUploadForm } from "../certificate-upload-form";
 import { Delete } from "lucide-react";
 import { auth } from "@/config/firebase";
 import { DeleteCertificateDialogue } from "../ui/delete-certificate-modal";
+import { 
+    stock03,
+} from "@/assets/assets";
 
 export const HomePage = () => {
     const navigate = useNavigate();
@@ -20,14 +22,17 @@ export const HomePage = () => {
     const [loading, setLoading] = useState(false);
     const [isUploadModalOpen, setUploadModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [certificateToDelete, setCertificateToDelete] = useState<number | null>(null);
+    const [certificateToDelete, setCertificateToDelete] = useState<string | null>(null);
 
     // Dummy data
     const [certificates, setCertificates] = useState([
-        { id: 1, title: "Certificate 1", date: "June 15, 2023", imageUrl: {stock01} },
-        { id: 2, title: "Certificate 2", date: "June 15, 2023", imageUrl: {stock01} },
-        { id: 3, title: "Certificate 3", date: "June 15, 2023", imageUrl: {stock01} },
-        { id: 4, title: "Certificate 4", date: "June 15, 2023", imageUrl: {stock01} }
+        { 
+            id: "BARSKLHB7yVifQ7cdVcK", 
+            title: "Certificate of Appreciation", 
+            date: "June 15, 2023", 
+            imageUrl: {stock03}
+        },
+
     ]);
 
     const filteredCertificates = certificates.filter(cert =>
@@ -36,7 +41,7 @@ export const HomePage = () => {
 
     const handleSearch = (e: any) => setSearchTerm(e.target.value);
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: string) => {
         setCertificateToDelete(id);
         setDeleteModalOpen(true);
     };
@@ -106,7 +111,7 @@ export const HomePage = () => {
                                             >
                                                 <img
                                                     // src={cert.imageUrl}
-                                                    src={cert.imageUrl.stock01}
+                                                    src={cert.imageUrl.stock03}
                                                     width={300}
                                                     height={200}
                                                     alt={cert.title}
