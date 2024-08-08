@@ -4,8 +4,9 @@ import { ChromeIcon } from "./ui/icons";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { LANDINGPAGE } from "../lib/routes";
+import { HOME, LANDINGPAGE } from "../lib/routes";
 import { useToast } from "./ui/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const loginSchema = yup.object().shape({
     email: yup.string().required("Email is required").email("Invalid email format"),
@@ -17,7 +18,7 @@ interface LoginFormProps {
     switchMode: () => void;
 };
 
-interface LoginFormData {
+export interface LoginFormData {
     email: string;
     password: string;
 };
@@ -29,19 +30,12 @@ export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
         resolver: yupResolver(loginSchema),
     });
 
+    const { clientSignIn, clientSignInWithGoogle } = useAuth();
 
     const handleGoogleSignIn = async () => {
         try {
             setIsLoading(true);
-            // timeout for 2 seconds
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            throw new Error("Google Sign In is not yet implemented");
-            toast({
-                title: "Success",
-                description: "Successfully signed in with Google.",
-                variant: "success",
-                duration: 3000
-            });
+            await clientSignInWithGoogle();
         } catch(error: unknown) {
             if(error instanceof Error) {
                 toast({
@@ -59,23 +53,12 @@ export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
     const onSubmit = async (data: LoginFormData) => {
         try {
             setIsLoading(true);
-            // timeout for 2 seconds
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            throw new Error("Sign In is not yet implemented");
-            toast({
-                title: "Success",
-                description: "Successfully authenticated.",
-                variant: "success",
-                duration: 3000
-            });
+            await clientSignIn(data);
         } catch(error: unknown) {
             if(error instanceof Error) {
-                toast({
-                    title: "An Error Occurred",
-                    description: `${error.message}`,
-                    variant: "destructive",
-                    duration: 4000
-                });
+                console.log(error.message);
+            } else {
+                console.log(error);
             }
         } finally {
             setIsLoading(false);
@@ -134,7 +117,7 @@ export const LoginForm = ({ setIsLoading, switchMode }: LoginFormProps) => {
                 <div>
                     <div className="flex items-center justify-between">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                        <Link to="/" className="text-xs text-primary hover:underline">Forgot password?</Link>
+                        {/* <Link to="/" className="text-xs text-primary hover:underline">Forgot password?</Link> */}
                     </div>
                     <Controller
                         name="password"

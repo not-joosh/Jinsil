@@ -2,8 +2,12 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LANDINGPAGE } from "../lib/routes";
+import { HOME, LANDINGPAGE } from "../lib/routes";
 import * as yup from "yup";
+import { useToast } from "./ui/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { auth } from "@/config/firebase";
+import { error } from "console";
 
 const registerSchema = yup.object().shape({
     firstName: yup.string().required("First name is required"),
@@ -20,7 +24,7 @@ interface RegisterFormProps {
     switchMode: () => void;
 };
 
-interface RegisterFormData {
+export interface RegisterFormData {
     firstName: string;
     lastName: string;
     email: string;
@@ -30,17 +34,33 @@ interface RegisterFormData {
 
 export const RegisterForm = ({ setIsLoading, switchMode }: RegisterFormProps) => {
     const navigate = useNavigate();
+    const { toast } = useToast();
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(registerSchema),
     });
 
-    const onSubmit = (data: RegisterFormData) => {
-        setIsLoading(true);
-        // Handle register logic here
-        setTimeout(() => {
+    const { clientRegister } = useAuth();
+
+    const onSubmit = async (data: RegisterFormData) => {
+        try {
+            setIsLoading(true);
+            console.log(data);
+            await clientRegister(data);
+
+            // // If Successfull navigate them
+            if(auth.currentUser?.uid) {
+                localStorage.setItem("uid", auth.currentUser.uid);
+            } else {
+                throw new Error("User not found");
+            }
+            navigate(HOME);
+        } catch(error: unknown) {
+            if(error instanceof Error) {
+                console.log(error.message);
+            }
+        } finally {
             setIsLoading(false);
-            // Navigate to another page or handle post-register actions
-        }, 2000);
+        }
     };
 
     return (

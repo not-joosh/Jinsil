@@ -6,46 +6,32 @@ import { LogOutIcon, MenuIcon, SettingsIcon } from "./icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { logo } from "@/assets/assets"; 
 import { MapIcon, UserIcon } from "lucide-react";
-import { useToast } from "./use-toast";
 import { LANDINGPAGE, SETTINGS } from "@/lib/routes";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Navbar = () => {
     const [selected, setSelected] = useState("certificates");
     const [isExpanded, setIsExpanded] = useState(false);
+    const { clientSignOut } = useAuth();
     const handleToggle = () => setIsExpanded(!isExpanded);
     const navigate = useNavigate();
-    const { toast } = useToast();
 
     const userName = "John Doe";
-    // const userEmail = "johndoe@example.com";
 
     const handleLogout = async () => {
         try {
-
             // Signing out 
-
-
-            toast({
-                title: "Success",
-                description: "Successfully logged out.",
-                variant: "success",
-                duration: 2000
-            });
+            await clientSignOut();
             navigate(LANDINGPAGE)
-            localStorage.removeItem('uid');
         } catch(error: unknown) {
             if(error instanceof Error) {
-                toast({
-                    title: "An Error Occurred",
-                    description: `${error.message}`,
-                    variant: "destructive",
-                    duration: 4000
-                });
+                console.log(error.message);
             } else {
                 console.log(error);
             }
-        }
-    };
+        };
+    }; 
+    
     return (
         <div className="fixed top-0 right-0 w-full bg-black text-primary-foreground p-4 md:hidden z-10">
             <div className="flex justify-between items-center">

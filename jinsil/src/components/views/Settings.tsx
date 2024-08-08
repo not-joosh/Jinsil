@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -11,9 +11,10 @@ import { motion } from "framer-motion"
 import { useForm, Controller } from "react-hook-form"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { HOME } from "@/lib/routes"
-import { useState } from "react";
+import { HOME, LANDINGPAGE } from "@/lib/routes"
+import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
+import { auth } from "@/config/firebase";
 // Form types
 
 interface EmailFormData {
@@ -62,6 +63,7 @@ const passwordSchema = yup.object().shape({
 export const Settings = () => {
     const [pictureSelected, setPictureSelected] = useState(false);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const { toast } = useToast();
 
     const { control: emailControl, handleSubmit: handleEmailSubmit, formState: { errors: emailErrors } } = useForm<EmailFormData>({
@@ -153,6 +155,12 @@ export const Settings = () => {
         }
     }
 
+    useEffect(() => {
+        const uid = auth.currentUser?.uid || localStorage.getItem('uid');
+        if(!uid) {
+            navigate(LANDINGPAGE);
+        } 
+    }, []);
     return (
         <>
             {loading && <LoadingIcon />}

@@ -4,47 +4,30 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Link, useNavigate } from "react-router-dom";
 import { LogOutIcon, SettingsIcon, ArrowLeftIcon, ArrowRightIcon } from "./icons";
 import { motion, AnimatePresence } from "framer-motion";
-import { useToast } from "./use-toast";
 import { MapIcon, UserIcon } from "lucide-react";
 import { HOME, LANDINGPAGE, SETTINGS } from "@/lib/routes";
-
+import { useAuth } from "@/hooks/useAuth";
 
 export const SideMenu = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [optionSelected, setOptionSelected] = useState("certificates");
-    const { toast } = useToast();
-    const navigate = useNavigate();
-
-    const handleToggle = () => setIsCollapsed(!isCollapsed);
-
     const userName = "John Doe";
+    const navigate = useNavigate();
+    const handleToggle = () => setIsCollapsed(!isCollapsed);
+    const { clientSignOut } = useAuth();
     const userEmail = "johndoe@example.com";
     const handleLogout = async () => {
         try {
-
             // Signing out 
-
-
-            toast({
-                title: "Success",
-                description: "Successfully logged out.",
-                variant: "success",
-                duration: 2000
-            });
+            await clientSignOut();
             navigate(LANDINGPAGE)
-            localStorage.removeItem('uid');
         } catch(error: unknown) {
             if(error instanceof Error) {
-                toast({
-                    title: "An Error Occurred",
-                    description: `${error.message}`,
-                    variant: "destructive",
-                    duration: 4000
-                });
+                console.log(error.message);
             } else {
                 console.log(error);
             }
-        }
+        };
     };
     return (
         <motion.div
