@@ -1,11 +1,12 @@
 import { RegisterFormData } from "@/components/register-form";
 import { useToast } from "@/components/ui/use-toast";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
-import { auth, db } from "@/config/firebase";
+import { auth, db, defaultProfilePicture, pfpStorageRef, storage } from "@/config/firebase";
 import { LoginFormData } from "@/components/login-form";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { LANDINGPAGE, HOME } from "@/lib/routes";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const useAuth = () => {
     const { toast } = useToast();
@@ -37,23 +38,22 @@ export const useAuth = () => {
 
     const clientRegister = async (data: RegisterFormData) => {
         try {
-            // First we need to make sure there are no spaces in all the fields
             const firstName = data.firstName.trim();
             const lastName = data.lastName.trim();
             const email = data.email.trim();
             const password = data.password.trim();
-    
+        
             // Check if email already exists
             const userQuery = await fetchSignInMethodsForEmail(auth, email);
             if (userQuery.length > 0) {
                 throw new Error('Email is already in use.');
             }
-    
+        
             // Create user
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const { uid } = userCredential.user;
-    
-            // Create user document in Firestore
+        
+            // Create user document in Firestore with default PFP
             const userDocRef = doc(db, 'users', uid);
             await setDoc(userDocRef, {
                 uid,
@@ -61,20 +61,21 @@ export const useAuth = () => {
                 lastName,
                 email,
                 certificates: [],
-                needsValidation: false
+                needsValidation: false,
+                defaultPFP: defaultProfilePicture,
+                customPFP: ""
             });
-    
+        
             // Sign in the user
             await signInWithEmailAndPassword(auth, email, password);
-    
+        
             toast({
                 title: "Success",
                 description: "Successfully Registered.",
                 variant: "success",
                 duration: 3000
             });
-
-            // // If Successfull navigate them
+    
             if(auth.currentUser?.uid) {
                 localStorage.setItem("uid", auth.currentUser.uid);
             } else {
@@ -97,34 +98,53 @@ export const useAuth = () => {
         try {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
-    
+        
             const user = result.user;
-            const { uid, displayName, email } = user;
+            const { uid, displayName, email, photoURL } = user;
     
+            // Initialize Firebase Storage
+        
             // Check if user already exists in Firestore
             const userDocRef = doc(db, 'users', uid);
             const userDoc = await getDoc(userDocRef);
-    
+        
+            let customPFP = "";
+            if (photoURL) {
+                // If the user has a profile picture from Google, upload it to Firebase Storage
+                const pfpRef = ref(storage, `${pfpStorageRef}/${uid}.jpg`);
+                const response = await fetch(photoURL);
+                const blob = await response.blob();
+                await uploadBytes(pfpRef, blob);
+                customPFP = await getDownloadURL(pfpRef);
+            }
+        
             if (!userDoc.exists()) {
                 // Create user document if it doesn't exist
-                const [firstName, lastName] = (displayName || '').split(' '); // Split display name to first and last names
+                const [firstName, lastName] = (displayName || '').split(' ');
                 await setDoc(userDocRef, {
                     uid,
                     firstName: firstName || '',
                     lastName: lastName || '',
                     email,
                     certificates: [],
-                    needsValidation: true
+                    needsValidation: true,
+                    defaultPFP: defaultProfilePicture,
+                    customPFP: customPFP || ""
                 });
-            };
-
+            } else if (customPFP) {
+                // Update existing user with custom PFP if it doesn't have one
+                await setDoc(userDocRef, {
+                    customPFP,
+                }, { merge: true });
+            }
+    
             toast({
                 title: "Success",
                 description: "Successfully signed in with Google.",
                 variant: "success",
                 duration: 3000
             });
-
+    
             localStorage.setItem("uid", auth.currentUser?.uid || "");
             navigate(HOME);
         } catch (error: unknown) {
@@ -167,8 +187,6 @@ export const useAuth = () => {
             }
         }
     };
-
-   
 
     return { clientRegister, clientSignIn, clientSignOut, clientSignInWithGoogle };
 };

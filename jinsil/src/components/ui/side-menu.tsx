@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,15 +7,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MapIcon, UserIcon } from "lucide-react";
 import { HOME, LANDINGPAGE, SETTINGS } from "@/lib/routes";
 import { useAuth } from "@/hooks/useAuth";
+import { auth, usersRef } from "@/config/firebase";
+import { doc, onSnapshot, query, where } from "firebase/firestore";
 
 export const SideMenu = () => {
+    // States of information from firebase
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [profilePicture, setProfilePicture] = useState("");
+
+    // States of the component
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [optionSelected, setOptionSelected] = useState("certificates");
-    const userName = "John Doe";
     const navigate = useNavigate();
     const handleToggle = () => setIsCollapsed(!isCollapsed);
     const { clientSignOut } = useAuth();
-    const userEmail = "johndoe@example.com";
+
+
     const handleLogout = async () => {
         try {
             // Signing out 
@@ -29,6 +37,29 @@ export const SideMenu = () => {
             }
         };
     };
+
+    useEffect(() => {
+        const uid = auth.currentUser?.uid || localStorage.getItem("uid");
+        if(!uid) {
+            navigate(LANDINGPAGE);
+        } 
+        
+        // Real time fetching user's data
+        const unsubscribe = onSnapshot(query(usersRef, where('uid', '==', uid)), (snapshot) => {
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                setName(`${data.firstName} ${data.lastName}`);
+                setEmail(data.email);
+                if(data.customPFP) {
+                    setProfilePicture(data.customPFP);
+                } else {
+                    setProfilePicture(data.defaultPFP);
+                }
+            });
+        })
+        return () => unsubscribe();
+    }, []);
+
     return (
         <motion.div
             className={`bg-black text-primary-foreground p-6 flex flex-col justify-between h-full ${isCollapsed ? "w-20" : "w-64"} transition-all duration-300 ${isCollapsed ? "md:w-20" : "md:w-64"} hidden md:flex`}
@@ -40,8 +71,8 @@ export const SideMenu = () => {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Avatar className={`h-12 w-12 cursor-pointer ${isCollapsed ? "ml-2" : ""}`}>
-                            <AvatarImage src="/placeholder-user.jpg" alt={userName} />
-                            <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={profilePicture} alt={name} />
+                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -55,8 +86,8 @@ export const SideMenu = () => {
                 </DropdownMenu>
                 {!isCollapsed && (
                     <div className="text-center">
-                        <p className="font-bold">{userName}</p>
-                        <p className="text-sm">{userEmail}</p>
+                        <p className="font-bold">{name}</p>
+                        <p className="text-sm">{email}</p>
                     </div>
                 )}
                 <AnimatePresence>

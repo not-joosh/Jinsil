@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
@@ -8,15 +8,17 @@ import { logo } from "@/assets/assets";
 import { MapIcon, UserIcon } from "lucide-react";
 import { LANDINGPAGE, SETTINGS } from "@/lib/routes";
 import { useAuth } from "@/hooks/useAuth";
+import { auth, usersRef } from "@/config/firebase";
+import { onSnapshot, query, where } from "firebase/firestore";
 
 export const Navbar = () => {
     const [selected, setSelected] = useState("certificates");
+    const [name, setName] = useState("");
+    const [profilePicture, setProfilePicture] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
     const { clientSignOut } = useAuth();
     const handleToggle = () => setIsExpanded(!isExpanded);
     const navigate = useNavigate();
-
-    const userName = "John Doe";
 
     const handleLogout = async () => {
         try {
@@ -32,6 +34,27 @@ export const Navbar = () => {
         };
     }; 
     
+    useEffect(() => {
+        const uid = auth.currentUser?.uid || localStorage.getItem("uid");
+        if(!uid) {
+            navigate(LANDINGPAGE);
+        } 
+        
+        // Real time fetching user's data
+        const unsubscribe = onSnapshot(query(usersRef, where('uid', '==', uid)), (snapshot) => {
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                setName(`${data.firstName} ${data.lastName}`);
+                if(data.customPFP) {
+                    setProfilePicture(data.customPFP);
+                } else {
+                    setProfilePicture(data.defaultPFP);
+                }
+            });
+        })
+        return () => unsubscribe();
+    }, []);
+
     return (
         <div className="fixed top-0 right-0 w-full bg-black text-primary-foreground p-4 md:hidden z-10">
             <div className="flex justify-between items-center">
@@ -44,8 +67,8 @@ export const Navbar = () => {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Avatar className="h-12 w-12 cursor-pointer">
-                            <AvatarImage src="/placeholder-user.jpg" alt={userName} />
-                            <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={profilePicture} alt={name} />
+                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
