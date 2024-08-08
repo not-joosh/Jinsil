@@ -8,6 +8,7 @@ import { AuthView } from "./components/views/Auth";
 import { Toaster } from "./components/ui/toaster";  
 import { HomePage } from "./components/views/HomePage";
 import { CertificatePage } from "./components/views/CertificatePage";
+import { Settings } from "./components/views/Settings";
 /*================================================================================
 *               COMPONENTS AND ROUTES
 ==================================================================================*/
@@ -26,7 +27,7 @@ function App() {
         <Route path={HOME} element={<HomePage />} />
         <Route path="certificate/:id" element={<CertificatePage />} />
         <Route path={AUTH} element={<AuthView />} />
-        <Route path={SETTINGS} element={<div>Settings</div>} />
+        <Route path={SETTINGS} element={<Settings />} />
         <Route path="*" element={<div>404 - Page Not Found</div>} />
       </Routes>
     </Router>

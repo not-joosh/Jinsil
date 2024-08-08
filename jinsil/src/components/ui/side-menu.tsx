@@ -1,19 +1,51 @@
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LogOutIcon, SettingsIcon, ArrowLeftIcon, ArrowRightIcon } from "./icons";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useToast } from "./use-toast";
 import { MapIcon, UserIcon } from "lucide-react";
+import { HOME, LANDINGPAGE, SETTINGS } from "@/lib/routes";
+
 
 export const SideMenu = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [optionSelected, setOptionSelected] = useState("certificates");
+    const { toast } = useToast();
+    const navigate = useNavigate();
+
     const handleToggle = () => setIsCollapsed(!isCollapsed);
 
     const userName = "John Doe";
     const userEmail = "johndoe@example.com";
+    const handleLogout = async () => {
+        try {
 
+            // Signing out 
+
+
+            toast({
+                title: "Success",
+                description: "Successfully logged out.",
+                variant: "success",
+                duration: 2000
+            });
+            navigate(LANDINGPAGE)
+            localStorage.removeItem('uid');
+        } catch(error: unknown) {
+            if(error instanceof Error) {
+                toast({
+                    title: "An Error Occurred",
+                    description: `${error.message}`,
+                    variant: "destructive",
+                    duration: 4000
+                });
+            } else {
+                console.log(error);
+            }
+        }
+    };
     return (
         <motion.div
             className={`bg-black text-primary-foreground p-6 flex flex-col justify-between h-full ${isCollapsed ? "w-20" : "w-64"} transition-all duration-300 ${isCollapsed ? "md:w-20" : "md:w-64"} hidden md:flex`}
@@ -31,7 +63,7 @@ export const SideMenu = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem>
-                            <Link to="/manage-profile" className="flex items-center gap-2">
+                            <Link to={SETTINGS} className="flex items-center gap-2">
                                 <UserIcon className="h-4 w-4" />
                                 Manage Profile
                             </Link>
@@ -52,18 +84,24 @@ export const SideMenu = () => {
                             exit={{ opacity: 0 }}
                             className="flex flex-col gap-4 w-full"
                         >
-                            <Link to="/settings" className="flex items-center gap-2 p-2  text-white rounded-lg hover:bg-gray-200 hover:text-black transition">
-                                <SettingsIcon className="h-5 w-5" />
-                                <span>Settings</span>
-                            </Link>
-                            <Link to="/certificates" className="flex items-center gap-2 p-2  text-white rounded-lg hover:bg-gray-200 hover:text-black transition">
+                            <button onClick = {() => {
+                                navigate(HOME);
+                                setOptionSelected("certificates");
+                            }} className={`${optionSelected == "certificates"? "bg-white text-black" : "bg-black text-white"} flex items-center gap-2 p-2  rounded-lg hover:bg-gray-200 hover:text-black transition`}>
                                 <MapIcon className="h-5 w-5" />
                                 <span>Certificates</span>
-                            </Link>
-                            <Link to="/logout" className="flex items-center gap-2 p-2  text-white rounded-lg hover:bg-gray-200 hover:text-black transition">
+                            </button>
+                            <button onClick = {() => {
+                                navigate(SETTINGS);
+                                setOptionSelected("settings");
+                            }} className={`${optionSelected == "settings"? "bg-white text-black" : "bg-black text-white"} flex items-center gap-2 p-2  rounded-lg hover:bg-gray-200 hover:text-black transition`}>
+                                <SettingsIcon className="h-5 w-5" />
+                                <span>Settings</span>
+                            </button>
+                            <button onClick = {handleLogout} className={`${optionSelected == "logout"? "bg-white text-black" : "bg-black text-white"} flex items-center gap-2 p-2  rounded-lg hover:bg-gray-200 hover:text-black transition`}>
                                 <LogOutIcon className="h-5 w-5" />
                                 <span>Logout</span>
-                            </Link>
+                            </button>
                         </motion.nav>
                     )}
                 </AnimatePresence>
