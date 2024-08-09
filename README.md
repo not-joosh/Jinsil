@@ -14,13 +14,11 @@
 
 ---
 
-## 🚀 Overview
+## Overview
 
 **Jinsil** is a user-friendly platform for sharing and managing your professional certificates. Whether you're showcasing your achievements or organizing your documents, Jinsil makes it easy to upload, share, and maintain your certificates securely.
 
----
-
-## ✨ Features
+## Features
 
 - **Authentication:**
   - Google Sign-In
@@ -36,9 +34,7 @@
   - Upload a profile picture
   - Delete account (removes all certificates and user data)
 
----
-
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Frontend:** Vite, React
 - **Backend:** Express.js, Node.js
@@ -46,12 +42,10 @@
 
 ---
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
----
+## Contact
 
-## 📫 Contact
-
-For any inquiries or feedback, please reach out to [Josh Ratificar](mailto:ratificarjosh@example.com).
+For any inquiries or feedback, please reach out to my [email](mailto:ratificarjosh@example.com).
