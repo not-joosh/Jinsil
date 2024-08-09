@@ -10,12 +10,15 @@ import { LANDINGPAGE, SETTINGS } from "@/lib/routes";
 import { useAuth } from "@/hooks/useAuth";
 import { auth, usersRef } from "@/config/firebase";
 import { onSnapshot, query, where } from "firebase/firestore";
+import { SkeletonLoader } from "./motion/skeleton-loader";
 
 export const Navbar = () => {
+    // @ts-ignore
     const [selected, setSelected] = useState("certificates");
     const [name, setName] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
+    const [skeletonLoad, setSkeletonLoad] = useState(true);
     const { clientSignOut } = useAuth();
     const handleToggle = () => setIsExpanded(!isExpanded);
     const navigate = useNavigate();
@@ -52,6 +55,7 @@ export const Navbar = () => {
                 }
             });
         })
+        setSkeletonLoad(false);
         return () => unsubscribe();
     }, []);
 
@@ -64,22 +68,26 @@ export const Navbar = () => {
                         <MenuIcon className="h-6 w-6" />
                     </button>
                 </div>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Avatar className="h-12 w-12 cursor-pointer">
-                            <AvatarImage src={profilePicture} alt={name} />
-                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                            <Link to={SETTINGS} className="flex items-center gap-2">
-                                <UserIcon className="h-4 w-4" />
-                                Manage Profile
-                            </Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                {skeletonLoad? (
+                    <SkeletonLoader width={200} height={100} speed={0.2} minRows={7} maxRows={10} />
+                ):(
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Avatar className="h-12 w-12 cursor-pointer">
+                                <AvatarImage src={profilePicture} alt={name} />
+                                <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                                <Link to={SETTINGS} className="flex items-center gap-2">
+                                    <UserIcon className="h-4 w-4" />
+                                    Manage Profile
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
             </div>
             <AnimatePresence>
                 {isExpanded && (

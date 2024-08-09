@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { HOME, LANDINGPAGE } from "../lib/routes";
 import * as yup from "yup";
-import { useToast } from "./ui/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { auth } from "@/config/firebase";
-import { error } from "console";
 
 const registerSchema = yup.object().shape({
     firstName: yup.string().required("First name is required"),
@@ -34,7 +32,6 @@ export interface RegisterFormData {
 
 export const RegisterForm = ({ setIsLoading, switchMode }: RegisterFormProps) => {
     const navigate = useNavigate();
-    const { toast } = useToast();
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(registerSchema),
     });

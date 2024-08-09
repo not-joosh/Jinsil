@@ -10,10 +10,10 @@ import stock05 from '../assets/stock_05.png';
 import stock06 from '../assets/stock_06.png';
 import stock07 from '../assets/stock_07.png';
 import stock08 from '../assets/stock_08.png';
-
+import error_img from '../assets/404_image.png';
 export {
     logo, developer, stock00,
     stock01, stock02, stock03,
     stock04, stock05, stock06,
-    stock07, stock08
+    stock07, stock08, error_img
 };

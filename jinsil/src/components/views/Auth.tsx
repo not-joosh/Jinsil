@@ -1,6 +1,6 @@
 import { stock03, stock04 } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { GradientSwipeBlob } from "../ui/motion/GradientSwipBlob";
 import { LoadingIcon } from "../ui/motion/LoadingIcon";
 import { useEffect, useState } from "react";

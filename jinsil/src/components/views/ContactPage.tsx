@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { ArrowLeftIcon, GithubIcon, GlobeIcon, InstagramIcon, LinkedinIcon } from "../ui/icons";
 import { developer } from "../../assets/assets";
 import { motion } from "framer-motion";

@@ -1,14 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Certificate } from "../certificate";
 import { DefaultHeader } from "../ui/default-header";
 import { DefaultFooter } from "../ui/default-footer";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { PrivacyPage } from "./PrivacyPage";
 import { useState } from "react";
 import { ContactPage } from "./ContactPage";
-import { CubingTransition } from "../ui/motion/CubingTransition";
-import { GradientSwipeBlob } from "../ui/motion/GradientSwipBlob";
-import { WipeTransition } from "../ui/motion/WipeTransition";
 import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
 
 
@@ -16,8 +13,6 @@ export const CertificatePage = () => {
   const { id } = useParams<{ id: string }>();
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showContact, setShowContact] = useState(false);
-
-  const navigate = useNavigate();
 
   const toggleBodyOverflow = (shouldHide: boolean) => {
       if (shouldHide) {

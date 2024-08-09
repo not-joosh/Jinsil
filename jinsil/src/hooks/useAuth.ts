@@ -102,25 +102,24 @@ export const useAuth = () => {
             const user = result.user;
             const { uid, displayName, email, photoURL } = user;
     
-            // Initialize Firebase Storage
-        
             // Check if user already exists in Firestore
             const userDocRef = doc(db, 'users', uid);
             const userDoc = await getDoc(userDocRef);
         
-            let customPFP = "";
-            if (photoURL) {
-                // If the user has a profile picture from Google, upload it to Firebase Storage
-                const pfpRef = ref(storage, `${pfpStorageRef}/${uid}.jpg`);
-                const response = await fetch(photoURL);
-                const blob = await response.blob();
-                await uploadBytes(pfpRef, blob);
-                customPFP = await getDownloadURL(pfpRef);
-            }
-        
             if (!userDoc.exists()) {
                 // Create user document if it doesn't exist
                 const [firstName, lastName] = (displayName || '').split(' ');
+                let customPFP = "";
+    
+                if (photoURL) {
+                    // If the user has a profile picture from Google, upload it to Firebase Storage
+                    const pfpRef = ref(storage, `${pfpStorageRef}/${uid}.jpg`);
+                    const response = await fetch(photoURL);
+                    const blob = await response.blob();
+                    await uploadBytes(pfpRef, blob);
+                    customPFP = await getDownloadURL(pfpRef);
+                }
+    
                 await setDoc(userDocRef, {
                     uid,
                     firstName: firstName || '',
@@ -131,11 +130,24 @@ export const useAuth = () => {
                     defaultPFP: defaultProfilePicture,
                     customPFP: customPFP || ""
                 });
-            } else if (customPFP) {
-                // Update existing user with custom PFP if it doesn't have one
-                await setDoc(userDocRef, {
-                    customPFP,
-                }, { merge: true });
+            } else {
+                // User document exists, check if customPFP is empty
+                const existingUserData = userDoc.data();
+                const existingCustomPFP = existingUserData?.customPFP || "";
+    
+                if (photoURL && !existingCustomPFP) {
+                    // If the user has a profile picture from Google and no customPFP, upload it to Firebase Storage
+                    const pfpRef = ref(storage, `${pfpStorageRef}/${uid}.jpg`);
+                    const response = await fetch(photoURL);
+                    const blob = await response.blob();
+                    await uploadBytes(pfpRef, blob);
+                    const newCustomPFP = await getDownloadURL(pfpRef);
+    
+                    // Update existing user with custom PFP if it doesn't have one
+                    await setDoc(userDocRef, {
+                        customPFP: newCustomPFP,
+                    }, { merge: true });
+                }
             }
     
             toast({

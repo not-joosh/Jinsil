@@ -8,13 +8,14 @@ import { useToast } from "./ui/use-toast";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { motion } from "framer-motion";
+import { useCertificate } from "@/hooks/useCertificate";
 interface CertificateUploadFormProps {
     isOpen: boolean;
     onClose: () => void;
     setIsLoading: (value: boolean) => void;
 }
 
-interface CertificateUploadFormData {
+export interface CertificateUploadFormData {
     photo: File;
     dateCompleted: string;
     title: string;
@@ -23,7 +24,13 @@ interface CertificateUploadFormData {
 }
 
 const schema = yup.object().shape({
-    photo: yup.mixed().required("Certificate image is required"),
+    photo: yup
+        .mixed()
+        .required("Certificate image is required")
+        .test("fileType", "Only jpg, jpeg, png files are allowed", (value) => {
+            // @ts-ignore
+            return value && ["image/jpeg", "image/png", "image/jpg"].includes(value.type);
+        }),
     dateCompleted: yup.string().required("Date completed is required"),
     title: yup
         .string()
@@ -33,7 +40,9 @@ const schema = yup.object().shape({
     awardedTo: yup.string().required("Awarded to is required"),
 });
 
+
 export const CertificateUploadForm = ({ isOpen, onClose, setIsLoading }: CertificateUploadFormProps) => {
+    const { createCertificate } = useCertificate();
     const { toast } = useToast();
     const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm<CertificateUploadFormData>({
         // @ts-ignore
@@ -45,16 +54,10 @@ export const CertificateUploadForm = ({ isOpen, onClose, setIsLoading }: Certifi
     const onSubmit = async (data: CertificateUploadFormData) => {
         try {
             setIsLoading(true);
-            // Simulate form submission delay
-            console.log("Form Data:", data);
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            toast({
-                title: "Success",
-                description: "Successfully Uploaded Certificate!",
-                variant: "success",
-                duration: 3000
-            });
-            handleClose();
+            const success = await createCertificate(data);
+            if(success) {
+                handleClose();
+            }
         } catch (error: unknown) {
             if (error instanceof Error) {
                 toast({
@@ -134,10 +137,12 @@ export const CertificateUploadForm = ({ isOpen, onClose, setIsLoading }: Certifi
                                         <Controller
                                             name="photo"
                                             control={control}
+                                            // @ts-ignore
                                             render={({ field }) => (
                                                 <Input
                                                     id="certificate-image"
                                                     type="file"
+                                                    accept = "image/png, image/jpeg, image/jpg"
                                                     className="sr-only"
                                                     onChange={(e) => {
                                                         if (e.target.files && e.target.files[0]) {

@@ -1,11 +1,15 @@
 
 export interface Certificate {
+    id: string;
     title: string;
-    ownedBy: string;
-    dateCompleted: string;
     description: string;
+    awardedTo: string;
+    dateCompleted: string;
     imageUrl: string;
-};
+    ownerUid: string;
+    photoName: string;
+    createdAt: string;
+}
 
 export interface User {
     uid: string;
@@ -13,4 +17,6 @@ export interface User {
     displayName: string;
     photoURL: string;
 };
+
+
 

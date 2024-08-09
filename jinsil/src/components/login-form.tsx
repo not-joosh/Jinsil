@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChromeIcon } from "./ui/icons";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { HOME, LANDINGPAGE } from "../lib/routes";
+import { LANDINGPAGE } from "../lib/routes";
 import { useToast } from "./ui/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 

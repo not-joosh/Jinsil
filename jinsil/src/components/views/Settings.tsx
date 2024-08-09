@@ -1,38 +1,40 @@
 import { Link, useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Label } from "@radix-ui/react-dropdown-menu"
+// import { Label } from "@radix-ui/react-dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { UploadIcon } from "../ui/icons"
-import { stock00 } from "@/assets/assets"
 import { LoadingIcon } from "../ui/motion/LoadingIcon";
 import { DiagonalSlideTransition } from "../ui/motion/DiagonalSlideTransition";
 import { motion } from "framer-motion"
 import { useForm, Controller } from "react-hook-form"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { HOME, LANDINGPAGE } from "@/lib/routes"
+import { HOME, LANDINGPAGE, SETTINGS } from "@/lib/routes"
 import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
-import { auth } from "@/config/firebase";
+import { auth, usersRef } from "@/config/firebase";
+import { onSnapshot, query, where } from "firebase/firestore";
+import { useProfile } from "@/hooks/useProfile";
+import { SkeletonLoader } from "../ui/motion/skeleton-loader";
 // Form types
 
-interface EmailFormData {
-    email: string;
-}
+// interface EmailFormData {
+//     email: string;
+// }
 interface PictureFormData {
     picture: FileList;
 }
-interface PasswordFormData {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-}
+// interface PasswordFormData {
+//     currentPassword: string;
+//     newPassword: string;
+//     confirmPassword: string;
+// }
 
 // Form Schemas
-const emailSchema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Email is required"),
-});
+// const emailSchema = yup.object().shape({
+//     email: yup.string().email("Invalid email").required("Email is required"),
+// });
 
 
 const pictureSchema = yup.object().shape({
@@ -52,65 +54,82 @@ const pictureSchema = yup.object().shape({
         }),
 });
 
-const passwordSchema = yup.object().shape({
-    currentPassword: yup.string().required("Current password is required"),
-    newPassword: yup.string().required("New password is required").min(6, "Password must be at least 6 characters long"),
-    confirmPassword: yup.string().oneOf([yup.ref('newPassword')], 'Passwords must match').required('Confirm password is required')
-});
+// const passwordSchema = yup.object().shape({
+//     currentPassword: yup.string().required("Current password is required"),
+//     newPassword: yup.string().required("New password is required").min(6, "Password must be at least 6 characters long"),
+//     confirmPassword: yup.string().oneOf([yup.ref('newPassword')], 'Passwords must match').required('Confirm password is required')
+// });
 
 // Settings Component
 
 export const Settings = () => {
-    const [pictureSelected, setPictureSelected] = useState(false);
+    // @ts-ignore
     const [loading, setLoading] = useState(false);
+    // @ts-ignore
+    const [email, setEmail] = useState("");
+    const [profilePicture, setProfilePicture] = useState("");
+    const [pictureSelected, setPictureSelected] = useState(false);
+    const [skeletonLoad, setSkeletonLoad] = useState(true);
+    const { deleteUserFootprint, updateProfilePicture } = useProfile();
     const navigate = useNavigate();
     const { toast } = useToast();
 
-    const { control: emailControl, handleSubmit: handleEmailSubmit, formState: { errors: emailErrors } } = useForm<EmailFormData>({
-        resolver: yupResolver(emailSchema) 
-    });
+    
+    // const { control: emailControl, handleSubmit: handleEmailSubmit, formState: { errors: emailErrors } } = useForm<EmailFormData>({
+    //     resolver: yupResolver(emailSchema) 
+    // });
 
-    const { control: pictureControl, handleSubmit: handlePictureSubmit, formState: { errors: pictureErrors } } = useForm<PictureFormData>({
+    const { reset: pictureReset, control: pictureControl, handleSubmit: handlePictureSubmit, formState: { errors: pictureErrors } } = useForm<PictureFormData>({
         // @ts-ignore
         resolver: yupResolver(pictureSchema)
     });
 
-    const { control: passwordControl, handleSubmit: handlePasswordSubmit, formState: { errors: passwordErrors } } = useForm<PasswordFormData>({
-        resolver: yupResolver(passwordSchema)
-    });
+    // const { control: passwordControl, handleSubmit: handlePasswordSubmit, formState: { errors: passwordErrors } } = useForm<PasswordFormData>({
+    //     resolver: yupResolver(passwordSchema)
+    // });
 
-    const onPictureSubmit = (formData: PictureFormData) => {
-
+    const onPictureSubmit = async (formData: PictureFormData) => {
         try {
-            console.log("Picture Data:", formData);
+            setLoading(true);
             // Validate if the picture data is correctly captured
             if (formData.picture.length === 0) {
                 throw new Error ("No picture selected.");
             } 
-            console.log("Picture uploaded:", formData.picture[0]);
+            // console.log("Picture Data:", formData);
+            // console.log("Picture uploaded:", formData.picture[0]);
+            const success = await updateProfilePicture(formData.picture[0]);
+            if(success) {
 
-            // Reset the form state
-            pictureControl._reset();
-            setPictureSelected(false);
-
+                toast({
+                    title: "Profile Picture Updated",
+                    description: "Your profile picture has been updated successfully. Reloading...",
+                    variant: "success",
+                    duration: 4000
+                });
+                // Reset the form state
+                pictureReset();
+                setPictureSelected(false);
+                // Refresh the page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
         } catch(error: unknown) {
             if(error instanceof Error) {
                 console.error(error.message);
             }
+        } finally {
+            setLoading(false);
         }
-
-        
     };
-    const onEmailSubmit = (formData: EmailFormData) => {
-        console.log("Email Data:", formData);
-    };
+    // const onEmailSubmit = (formData: EmailFormData) => {
+    //     console.log("Email Data:", formData);
+    // };
 
-    const onPasswordSubmit = (formData: PasswordFormData) => {
-        console.log("Password Data:", formData);
-    };
+    // const onPasswordSubmit = (formData: PasswordFormData) => {
+    //     console.log("Password Data:", formData);
+    // };
 
-
-    
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
@@ -145,13 +164,20 @@ export const Settings = () => {
         }
     };
 
-    const handleAccountDeletion = () => {
+    const handleAccountDeletion = async () => {
         try {
+            setLoading(true);
 
+            const success = await deleteUserFootprint();
+            if(success) {
+                navigate(LANDINGPAGE);
+            }
         } catch(error: unknown) {
             if(error instanceof Error) {
                 console.error(error.message);
             }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -160,7 +186,24 @@ export const Settings = () => {
         if(!uid) {
             navigate(LANDINGPAGE);
         } 
+
+        // Real time fetching user's data
+        const unsubscribe = onSnapshot(query(usersRef, where('uid', '==', uid)), (snapshot) => {
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                setEmail(data.email);
+                if(data.customPFP) {
+                    setProfilePicture(data.customPFP);
+                } else {
+                    setProfilePicture(data.defaultPFP);
+                }
+            });
+        })
+
+        setSkeletonLoad(false);
+        return () => unsubscribe();
     }, []);
+
     return (
         <>
             {loading && <LoadingIcon />}
@@ -175,10 +218,9 @@ export const Settings = () => {
                 </header>
                 <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
                     <div className="max-w-6xl w-full mx-auto grid gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
-                        <nav className="sticky top-20 text-sm text-muted-foreground grid gap-4">
-
-                            <Link to='' className="font-semibold text-primary">
-                                General
+                        <nav className="top-20 text-sm text-muted-foreground grid gap-4">
+                            <Link to = {SETTINGS} onClick = {() => {}} className="font-semibold text-primary md:bg-transparent ">
+                                Profile
                             </Link>
                         </nav>
                         <div className="grid gap-6">
@@ -195,14 +237,19 @@ export const Settings = () => {
                                     <CardContent>
                                     <form onSubmit={handlePictureSubmit(onPictureSubmit)} className="flex items-center gap-4">
                                         <div className="relative">
-                                            <img
-                                                src={stock00}
-                                                width="80"
-                                                height="80"
-                                                className="rounded-full"
-                                                alt="Profile Picture"
-                                                style={{ aspectRatio: "80/80", objectFit: "cover" }}
-                                            />
+                                            {skeletonLoad ? (
+                                                <SkeletonLoader width={200} height={100} speed={0.2} minRows={7} maxRows={10} />
+                                            ) : (
+                                                <img
+                                                    src={profilePicture}
+                                                    width="80"
+                                                    height="80"
+                                                    className="rounded-full"
+                                                    alt="loading."
+                                                    style={{ aspectRatio: "80/80", objectFit: "cover" }}
+                                                />
+
+                                            )}
                                             <Controller
                                                 name="picture"
                                                 control={pictureControl}
@@ -255,7 +302,7 @@ export const Settings = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Card>
+                                {/* <Card>
                                     <CardHeader>
                                         <CardTitle>Email</CardTitle>
                                         <CardDescription>Update your email address.</CardDescription>
@@ -283,14 +330,14 @@ export const Settings = () => {
                                             </div>
                                         </form>
                                     </CardContent>
-                                </Card>
+                                </Card> */}
                             </motion.div>
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Card>
+                                {/* <Card>
                                     <CardHeader>
                                         <CardTitle>Password</CardTitle>
                                         <CardDescription>Change your password.</CardDescription>
@@ -334,11 +381,11 @@ export const Settings = () => {
                                                 whileHover={{ scale: 1.05 }} 
                                                 whileTap={{ scale: 0.95 }}
                                             >
-                                                <button type="submit" className="rounded-xl pd-1 border-2 py-2 px-3 m-2 border-slate-300">Update Password</button>
+                                                <button type="submit" className="w-full rounded-xl pd-1 border-2 py-2 px-3 m-2 border-slate-300">Update Password</button>
                                             </motion.div>
                                         </form>
                                     </CardContent>
-                                </Card>
+                                </Card> */}
                             </motion.div>
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
@@ -356,7 +403,7 @@ export const Settings = () => {
                                                 <motion.button 
                                                     whileHover={{ scale: 1.05 }} 
                                                     whileTap={{ scale: 0.95 }}
-                                                    className="bg-red-500 text-white rounded-xl pd-1 border-2 py-2 px-3 m-2 border-slate-300"
+                                                    className="w-full bg-red-500 text-white rounded-xl pd-1 border-2 py-2 px-3 m-2 border-slate-300"
                                                 >
                                                     Delete Account
                                                 </motion.button>
